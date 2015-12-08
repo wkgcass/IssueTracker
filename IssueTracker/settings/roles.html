@@ -1,0 +1,71 @@
+<ul class="nav nav-tabs">
+    <li role="presentation" ng-class="{'active':role.id==included.currentRoleId}"
+        ng-repeat="role in included.roles">
+        <a href="#" ng-click="included.currentRoleId=role.id">{{role.name}}</a>
+    </li>
+    <li role="presentation">
+        <a href="#" class="fg-success-y">{{'ADDROLE' | translate}}</a>
+    </li>
+</ul>
+<div ng-repeat="role in included.roles" ng-show="role.id==included.currentRoleId">
+    <br>
+
+    <div class="row" ng-show="included.isAddUser">
+        <div class="col-xs-4" ng-repeat="member in included.members" ng-if="!included.containsUser(role.id,member.id)">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-8">{{member.name}}</div>
+                        <div class="col-xs-4" style="text-align: right;">
+                            <button class="btn btn-info btn-xs">{{'ADDUSER' | translate}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="panel panel-success">
+                <div class="panel-body" style="text-align: center;">
+                    <button class="btn btn-success btn-xs" ng-click="included.isAddUser=false">
+                        {{'RETURN' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-hide="included.isAddUser">
+        <div class="col-xs-4" ng-repeat="u in role.users">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-10">{{u.name}}</div>
+                        <div class="col-xs-2" style="text-align: right;">
+                            <a href="#" ng-click="included.removeUser(role.id,u.id)">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-4">
+            <div class="panel panel-info">
+                <div class="panel-body" style="text-align: center;">
+                    <button class="btn btn-info btn-xs" ng-click="included.isAddUser=true">
+                        {{'ADDROLEUSER' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" ng-hide="included.isAddUser">
+        <div class="col-xs-4">
+            <div class="panel panel-danger">
+                <div class="panel-body" style="text-align: center;">
+                    <button class="btn btn-warning btn-xs" ng-click="included.removeRole()">
+                        {{'REMOVEROLE' | translate}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

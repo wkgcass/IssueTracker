@@ -1,0 +1,111 @@
+.bg-info-x {
+    background-color: #d2e8f5;
+}
+
+.bg-warning-x {
+    background-color: #faf5de;
+}
+
+.bg-danger-x {
+    background-color: #efd7d7;
+}
+
+.bg-success-x {
+    background-color: #daeed0;
+}
+
+.bg-primary-x {
+    background-color: #306aac;
+}
+
+.bg-default-x {
+    background-color: #c3c3c3;
+}
+
+.bg-sky-blue {
+    background-color: #2e7de3;
+}
+
+.bg-warning-y {
+    background-color: #eba144;
+}
+
+.bg-danger-y {
+    background-color: #cf4245;
+}
+
+.bg-success-y {
+    background-color: #51ad50;
+}
+
+.bg-primary-y {
+    background-color: #306aac;
+}
+
+.bg-info-y {
+    background-color: #52b5d7;
+}
+
+.bg-default-y {
+    background-color: #c3c3c3;
+}
+
+a {
+    color: #000;
+}
+
+a:hover {
+    color: #52b5d7;
+}
+
+.fg-info-x {
+    color: #d2e8f5;
+}
+
+.fg-warning-x {
+    color: #faf5de;
+}
+
+.fg-danger-x {
+    color: #efd7d7;
+}
+
+.fg-success-x {
+    color: #efd7d7;
+}
+
+.fg-primary {
+    color: #306aac;
+}
+
+.fg-default {
+    color: #c3c3c3;
+}
+
+.fg-sky-blue {
+    color: #2e7de3;
+}
+
+.fg-warning-y {
+    color: #eba144;
+}
+
+.fg-danger-y {
+    color: #cf4245;
+}
+
+.fg-success-y {
+    color: #51ad50;
+}
+
+.fg-primary-y {
+    color: #306aac;
+}
+
+.fg-info-y {
+    color: #52b5d7;
+}
+
+.fg-default-y {
+    color: #c3c3c3;
+}

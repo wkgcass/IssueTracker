@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html ng-app="project" ng-controller="controller">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/angular.js"></script>
+    <script src="js/angular-translate.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/color.css">
+    <title>{{'PROJECT_TITLE' | translate}} - {{project.name}}</title>
+</head>
+<body style="padding-top: 70px;">
+<div class="container">
+    <div ng-include="'navbar.html'"></div>
+    <div class="row">
+        <div class="col-xs-9">
+            <h1>{{project.name}}</h1>
+
+            <h4>{{'VERSION' | translate}} <span class="glyphicon glyphicon-repeat"></span> {{project.version}}</h4>
+
+            <div class="panel panel-default">
+                <div class="panel-heading"><span class="glyphicon glyphicon-th-list"></span> {{'ReadMe' | translate}}</div>
+                <div class="panel-body" ng-bind-html="project.description">
+                </div>
+            </div>
+            <hr>
+            <h3>{{'RECENTEVENTS' | translate}}</h3>
+
+            <div class="list-group">
+                <div class="list-group-item" ng-repeat="event in events">
+                    <div ng-if="event.type=='issue'">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <a><h4>{{event.content.title}}</h4></a>
+                            </div>
+                            <div class="col-xs-6" style="text-align:right">
+                                Watch&nbsp;<span class="badge">{{event.content.watch}}</span>
+                            </div>
+                        </div>
+
+                        <p>
+                            <span class="badge bg-info bg-{{event.content.color}}-y" style="margin-top: -4px;">{{event.content.type}}</span>&nbsp;&nbsp;
+                            {{'POSTER' | translate}} <span class="glyphicon glyphicon-user"></span>
+                            {{event.content.user.name}}&nbsp;&nbsp;&nbsp;
+                            {{'POSTDATE' | translate}} <span class="glyphicon glyphicon-time"></span>
+                            {{event.content.issueDate | date:'yyyy/MM/dd'}}
+                        </p>
+
+                        <div ng-show="event.displayAll">
+                            <hr>
+                            <div style="margin-top: 10px;">{{event.content.content}}</div>
+                            <br>
+                            <a class="fg-sky-blue" style="cursor:pointer" ng-click="event.displayAll=false">{{'HIDEDETAIL'
+                                | translate}}</a>
+                        </div>
+                        <div ng-hide="event.displayAll">
+                            <a class="fg-sky-blue" style="cursor:pointer" ng-click="event.displayAll=true">{{'SHOWDETAIL'
+                                | translate}}</a>
+                        </div>
+                    </div>
+                    <div ng-if="event.type=='progress'">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <a><h4>{{event.content.title}}</h4></a>
+                            </div>
+                            <div class="col-xs-6" style="text-align:right">
+                                Vote&nbsp;<span class="badge">{{event.content.vote}}</span>
+                            </div>
+                        </div>
+
+                        <p>
+                            <span class="badge bg-sky-blue"
+                                  style="margin-top: -4px;">{{'PROGRESSBADGE' | translate}}</span>&nbsp;&nbsp;
+                            {{'POSTER' | translate}} <span class="glyphicon glyphicon-user"></span>
+                            {{event.content.user.name}}&nbsp;&nbsp;&nbsp;
+                            {{'POSTDATE' | translate}} <span class="glyphicon glyphicon-time"></span>
+                            {{event.content.commentDate | date:'yyyy/MM/dd'}}
+                        </p>
+
+                        <div ng-show="event.displayAll">
+                            <hr>
+                            <div style="margin-top: 10px;">{{event.content.content}}</div>
+                            <br>
+                            <a class="fg-sky-blue" style="cursor:pointer" ng-click="event.displayAll=false">{{'HIDEDETAIL'
+                                | translate}}</a>
+                        </div>
+                        <div ng-hide="event.displayAll">
+                            <a class="fg-sky-blue" style="cursor:pointer" ng-click="event.displayAll=true">{{'SHOWDETAIL'
+                                | translate}}</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav style="text-align: center;">
+                <ul class="pagination">
+                    <li ng-show="pagingInfo.currentPage!=1">
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li ng-repeat="page in pages" ng-class="{'active':page.active,'disabled':page.index=='...'}"><a
+                            href="#">{{page.index}}</a></li>
+                    <li ng-show="pagingInfo.currentPage!=pagingInfo.totalPages">
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-xs-3">
+            <h2>{{'PROJECTINFO' | translate}}</h2>
+            {{'CREATINGTIME' | translate}} <span class="glyphicon glyphicon-time"></span> {{project.creatingTime |
+            date:'yyyy/MM/dd'}}
+
+            <h2>{{'MEMBER' | translate}}</h2>
+            <ul class="list-group">
+                <li class="list-group-item" ng-repeat="member in members">
+                    <span class="badge">{{member.actions}}</span>
+                    {{member.name}}
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div ng-include="'foot.html'"></div>
+</body>
+<script>
+    var app = angular.module('project', ['pascalprecht.translate']).config(function ($translateProvider) {
+        $translateProvider.translations('zh-cn', i18n_zh_cn());
+        $translateProvider.preferredLanguage('zh-cn');
+    });
+    initUser(app);
+    app.controller('controller', ['$scope', 'User', '$sce', function ($scope, User, $sce) {
+        $scope.user = User;
+        $scope.navbar = {
+            current: "project"
+        };
+        $scope.project = {
+            projectId: 1,
+            name: "Issue Tracker",
+            version: "0.0.1-SNAPSHOT",
+            description: $sce.trustAsHtml("<h3>Issue Tracker 是一款事务记录软件.</h3>用于记录和跟踪事务"),
+            creatingTime: Date.now()
+        };
+        var pagingInfo = {
+            totalPages: 30,
+            currentPage: 15,
+            amount: 30,
+
+            nextPage: true,
+            previousPage: true,
+
+            changeTo: function (index) {
+                // TODO
+                paging($scope, pagingInfo.totalPages, pagingInfo.currentPage, 10);
+            }
+        };
+        pagingInfo.changeTo(1);
+        $scope.pagingInfo = pagingInfo;
+        $scope.members = [{
+            userId: 1,
+            name: "wkgcass@hotmail.com",
+            actions: 12
+        }, {
+            userId: 2,
+            name: "wkgcass",
+            actions: 10
+        }];
+        $scope.events = [{
+            type: "issue",
+            displayAll: false,
+            content: {
+                issueId: 1,
+                title: "界面需要美化",
+                user: {
+                    userId: 1,
+                    name: "wkgcass@hotmail.com"
+                },
+                content: "增加一些自定的css,而不要全套bootstrap",
+                type: "轻微",
+                color: "info",
+                issueDate: Date.now(),
+                watch: 2
+            }
+        }, {
+            type: "progress",
+            displayAll: false,
+            content: {
+                commentId: 1,
+                user: {
+                    userId: 2,
+                    name: "wkgcass"
+                },
+                title: "完成了页面设计",
+                content: "完成了页面设计",
+                commentDate: Date.now(),
+                vote: 7
+            }
+        }, {
+            type: "issue",
+            displayAll: false,
+            content: {
+                issueId: 2,
+                title: "在发布Issue时出现BUG!",
+                user: {
+                    userId: 1,
+                    name: "wkgcass@hotmail.com"
+                },
+                content: "许多时候点击发布后无响应",
+                type: "严重",
+                color: "danger",
+                issueDate: Date.now(),
+                watch: 3
+            }
+        }];
+    }]);
+</script>
+</html>

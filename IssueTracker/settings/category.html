@@ -1,0 +1,142 @@
+<table class="table">
+    <thead>
+    <tr>
+        <th width="15%">&nbsp;</th>
+        <th><span class="badge bg-default-y">&nbsp;&nbsp;</span></th>
+        <th><span class="badge bg-info-y">&nbsp;&nbsp;</span></th>
+        <th><span class="badge bg-success-y">&nbsp;&nbsp;</span></th>
+        <th><span class="badge bg-warning-y">&nbsp;&nbsp;</span></th>
+        <th><span class="badge bg-danger-y">&nbsp;&nbsp;</span></th>
+        <th><span class="badge bg-primary-y">&nbsp;&nbsp;</span></th>
+        <th width="15%">&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="type in included.types">
+        <th><span class="badge bg-{{type.color}}-y">{{type.name}}</span></th>
+        <th ng-click="included.setTypeColor(type.id,'default')">
+            <span ng-show="type.color=='default'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setTypeColor(type.id,'info')">
+            <span ng-show="type.color=='info'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setTypeColor(type.id,'success')">
+            <span ng-show="type.color=='success'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setTypeColor(type.id,'warning')">
+            <span ng-show="type.color=='warning'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setTypeColor(type.id,'danger')">
+            <span ng-show="type.color=='danger'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setTypeColor(type.id,'primary')">
+            <span ng-show="type.color=='primary'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th>
+            <button ng-click="included.removeType(type.id)" class="btn btn-danger btn-xs">{{'DELETE' | translate}}
+            </button>
+        </th>
+    </tr>
+    <tr ng-show="included.showAddTr">
+        <th>
+            <form class="form-inline" style="width: 20px;">
+                <input type="text" class="form-control" style="width: 100px;" ng-model="included.nameOfTypeToAdd">
+            </form>
+        </th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>
+            <div class="btn-group">
+                <button class="btn btn-success btn-xs" ng-click="included.addType()">{{'ADDTYPE' | translate}}</button>
+                <button class="btn btn-default btn-xs"
+                        ng-click="included.showAddTr=false;included.nameOfTypeToAdd = '';">{{'RETURN' | translate}}
+                </button>
+            </div>
+        </th>
+    </tr>
+    <tr ng-hide="included.showAddTr">
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>
+            <button class="btn btn-success btn-xs" ng-click="included.showAddTr=true">{{'ADDTYPE' | translate}}</button>
+        </th>
+    </tr>
+    <tr>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    <tr ng-repeat="state in included.states">
+        <th><span class="label label-{{state.color}}">{{state.name}}</span></th>
+        <th ng-click="included.setStateColor(state.id,'default')">
+            <span ng-show="state.color=='default'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setStateColor(state.id,'info')">
+            <span ng-show="state.color=='info'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setStateColor(state.id,'success')">
+            <span ng-show="state.color=='success'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setStateColor(state.id,'warning')">
+            <span ng-show="state.color=='warning'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setStateColor(state.id,'danger')">
+            <span ng-show="state.color=='danger'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th ng-click="included.setStateColor(state.id,'primary')">
+            <span ng-show="state.color=='primary'" class="glyphicon glyphicon-ok"></span>
+        </th>
+        <th>
+            <button ng-click="included.removeState(state.id)" class="btn btn-danger btn-xs">{{'DELETE' | translate}}
+            </button>
+        </th>
+    </tr>
+    <tr ng-show="included.showAddStateTr">
+        <th>
+            <form class="form-inline" style="width: 20px;">
+                <input type="text" class="form-control" style="width: 100px;" ng-model="included.nameOfStateToAdd">
+            </form>
+        </th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>
+            <div class="btn-group">
+                <button class="btn btn-success btn-xs" ng-click="included.addState()">{{'ADDSTATE' | translate}}</button>
+                <button class="btn btn-default btn-xs"
+                        ng-click="included.showAddStateTr=false;included.nameOfStateToAdd = '';">{{'RETURN' | translate}}
+                </button>
+            </div>
+        </th>
+    </tr>
+    <tr ng-hide="included.showAddStateTr">
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+        <th>
+            <button class="btn btn-success btn-xs" ng-click="included.showAddStateTr=true">{{'ADDSTATE' | translate}}</button>
+        </th>
+    </tr>
+    </tbody>
+</table>

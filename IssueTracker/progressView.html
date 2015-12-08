@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html ng-app="progress" ng-controller="controller">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/angular.js"></script>
+    <script src="js/angular-translate.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/color.css">
+    <title>{{'PROGRESS_TITLE' | translate}} - {{project.name}}</title>
+</head>
+<body style="padding-top: 70px;">
+<div class="container">
+    <div ng-include="'navbar.html'"></div>
+    <div class="row">
+        <div class="col-xs-8">
+            <h2>{{'PROGRESSLIST' | translate}}</h2>
+
+            <div class="list-group">
+                <div class="list-group-item" ng-repeat="event in events">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <a><h4>{{event.content.title}}</h4></a>
+                        </div>
+                        <div class="col-xs-6" style="text-align:right">
+                            Vote&nbsp;<span class="badge">{{event.content.vote}}</span>
+                        </div>
+                    </div>
+
+                    <p>
+                            <span class="badge bg-sky-blue"
+                                  style="margin-top: -4px;">{{'PROGRESSBADGE' | translate}}</span>&nbsp;&nbsp;
+                        {{'POSTER' | translate}} <span class="glyphicon glyphicon-user"></span>
+                        {{event.content.user.name}}&nbsp;&nbsp;&nbsp;
+                        {{'POSTDATE' | translate}} <span class="glyphicon glyphicon-time"></span>
+                        {{event.content.commentDate | date:'yyyy/MM/dd'}}
+                    </p>
+
+                    <div ng-show="event.displayAll">
+                        <hr>
+                        <div style="margin-top: 10px;">{{event.content.content}}</div>
+                        <br>
+                        <a class="fg-sky-blue" style="cursor:pointer" ng-click="event.displayAll=false">{{'HIDEDETAIL'
+                            | translate}}</a>
+                    </div>
+                    <div ng-hide="event.displayAll">
+                        <a class="fg-sky-blue" style="cursor:pointer" ng-click="event.displayAll=true">{{'SHOWDETAIL'
+                            | translate}}</a>
+                    </div>
+                </div>
+            </div>
+            <nav style="text-align: center;">
+                <ul class="pagination">
+                    <li ng-show="pagingInfo.currentPage!=1">
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li ng-repeat="page in pages" ng-class="{'active':page.active,'disabled':page.index=='...'}"><a
+                            href="#">{{page.index}}</a></li>
+                    <li ng-show="pagingInfo.currentPage!=pagingInfo.totalPages">
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-xs-4">
+            <h3>{{'POSTPROGRESS' | translate}}</h3>
+
+            <p>
+                <span class="glyphicon glyphicon-info-sign"></span> {{'PROJECTNAME' | translate}} - {{project.name}}
+            </p>
+
+            <div ng-if="user.userId>0">
+                <form>
+                    <div class="form-group">
+                        <label for="title">{{'PROGRESSTITLEINPUT' | translate}}</label>
+                        <input type="text" class="form-control" id="title"
+                               placeholder="{{'PROGRESSTITLEINPUT' | translate}}">
+                    </div>
+                    <div class="form-group">
+                        <label for="content">{{'PROGRESSCONTENTINPUT' | translate}}</label>
+                        <textarea class="form-control" id="content" style="resize: none;height: 250px;"
+                                  placeholder="{{'PROGRESSCONTENTINPUT' | translate}}"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-default">{{'SUBMIT' | translate}}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="'foot.html'"></div>
+</body>
+<script>
+    var app = angular.module('progress', ['pascalprecht.translate']).config(function ($translateProvider) {
+        $translateProvider.translations('zh-cn', i18n_zh_cn());
+        $translateProvider.preferredLanguage('zh-cn');
+    });
+    initUser(app);
+    app.controller('controller', function ($scope, User) {
+        $scope.user = User;
+        $scope.navbar = {
+            current: "progress"
+        };
+        $scope.project = {
+            projectId: 1,
+            name: "Issue Tracker"
+        };
+        var pagingInfo = {
+            totalPages: 30,
+            currentPage: 15,
+            amount: 30,
+
+            nextPage: true,
+            previousPage: true,
+
+            changeTo: function (index) {
+                // TODO
+                paging($scope, pagingInfo.totalPages, pagingInfo.currentPage, 10);
+            }
+        };
+        pagingInfo.changeTo(1);
+        $scope.pagingInfo = pagingInfo;
+        $scope.events = [{
+            type: "progress",
+            displayAll: false,
+            content: {
+                commentId: 1,
+                user: {
+                    userId: 2,
+                    name: "wkgcass"
+                },
+                title: "完成了页面设计",
+                content: "完成了页面设计",
+                commentDate: Date.now(),
+                vote: 7
+            }
+        }]
+    });
+</script>
+</html>

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html ng-app="project" ng-controller="controller">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/angular.js"></script>
+    <script src="js/angular-translate.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/color.css">
+    <title>{{'SETTING_TITLE' | translate}} - {{project.name}}</title>
+</head>
+<body style="padding-top: 70px;">
+<div class="container">
+    <div ng-include="'navbar.html'"></div>
+    <div class="row">
+        <div class="col-xs-3">
+            <h3>{{'SETTINGS_BEFORE_PRJ_NAME' | translate}} {{project.name}} {{'SETTINGS_AFTER_PRJ_NAME' |
+                translate}}</h3>
+            <ul class="list-group" ng-repeat="settings in settingsTree">
+                <li class="list-group-item active">{{settings.name | translate}}</li>
+                <li class="list-group-item" ng-repeat="s in settings.children">
+                    <span class="glyphicon glyphicon-ok" ng-hide="setting.name!=s.name"></span>
+                    <a href="#" ng-click="s.func();setting.name=s.name;setting.url=s.url;">{{s.name | translate}}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-xs-9">
+            <h3>{{setting.name | translate}}</h3>
+            <br>
+
+            <div ng-include="'settings/'+setting.url+'.html'"></div>
+        </div>
+    </div>
+</div>
+<div ng-include="'foot.html'"></div>
+</body>
+<script>
+    var angularScope;
+    var app = angular.module('project', ['pascalprecht.translate']).config(function ($translateProvider) {
+        $translateProvider.translations('zh-cn', i18n_zh_cn());
+        $translateProvider.preferredLanguage('zh-cn');
+    });
+    initUser(app);
+    app.controller('controller', function ($scope, User) {
+        angularScope = $scope;
+        $scope.user = User;
+        $scope.navbar = {
+            current: "setting"
+        };
+        $scope.project = {
+            projectId: 1,
+            name: "Issue Tracker"
+        };
+        $scope.included = {};
+        $scope.settingsTree = [{
+            name: "PROJECTSETTING",
+            children: [{
+                name: "PROJECTINFOSETTING",
+                url: "project-info",
+                func: function () {
+                    var o = {
+                        projectName: "Issue Tracker",
+                        projectDetail: "###Issue Tracker 是一款事务记录软件.\n用于记录和跟踪事务",
+                        projectNameBackUp: "Issue Tracker",
+                        projectDetailBackUp: "###Issue Tracker 是一款事务记录软件.\n用于记录和跟踪事务",
+                        reset: function () {
+                            o.projectName = o.projectNameBackUp;
+                            o.projectDetail = o.projectDetailBackUp;
+                        }
+                    };
+                    $scope.included = o;
+                }
+            }, {
+                name: "OPERATIONS",
+                url: "operations",
+                func: function () {
+                    var o = {
+                        deleteProject: function () {
+                            alert("删除工程:" + $scope.project.projectId + ":" + $scope.project.name);
+                        }
+                    };
+                    $scope.included = o;
+                }
+            }]
+        }, {
+            name: "COLLABORATION",
+            children: [{
+                name: "MEMBERS",
+                url: "members",
+                func: function () {
+                    var o = {
+                        members: [{
+                            id: 1,
+                            name: "wkgcass@hotmail.com"
+                        }, {
+                            id: 2,
+                            name: "wkgcass"
+                        }],
+                        removeMember: function (id) {
+                            var i;
+                            for (i = 0; i < o.members.length; ++i) {
+                                if (o.members[i].id == id) break;
+                            }
+                            o.members.remove(i);
+                        },
+                        selectUserText: "",
+                        showSelectUser: false,
+                        selectUserLoading: false,
+                        mouseOnSelectUserId: 0,
+                        changeSelectUser: function () {
+                            var selectUserUl = $('#selectUserUl');
+                            var selectUserInput = $('#selectUserInput');
+                            selectUserUl.width(selectUserInput.width());
+                            selectUserUl.css('left', selectUserInput.position().left);
+                            o.mouseOnSelectUserId = 0;
+                            if (o.selectUserText == "") {
+                                o.showSelectUser = false;
+                            } else {
+                                //o.selectUserLoading = true;
+                                o.showSelectUser = true;
+                                o.selectUsers = [{
+                                    id: 2,
+                                    name: "wkgcass"
+                                }, {
+                                    id: 1,
+                                    name: "wkgcass@hotmail.com"
+                                }];
+                            }
+                        },
+                        hideSelectUser: function () {
+                            o.showSelectUser = false;
+                        }
+                    };
+                    $scope.included = o;
+                }
+            }, {
+                name: "ROLES",
+                url: "roles",
+                func: function () {
+                    var o = {
+                        roles: [{
+                            id: 1,
+                            name: "管理员",
+                            users: [{
+                                id: 1,
+                                name: "wkgcass@hotmail.com"
+                            }]
+                        }, {
+                            id: 2,
+                            name: "开发",
+                            users: [{
+                                id: 2,
+                                name: "wkgcass"
+                            }]
+                        }, {
+                            id: 3,
+                            name: "测试",
+                            users: []
+                        }],
+                        members: [{
+                            id: 1,
+                            name: "wkgcass@hotmail.com"
+                        }, {
+                            id: 2,
+                            name: "wkgcass"
+                        }],
+                        isAddUser: false,
+                        removeUser: function (roleId, userId) {
+                            var role;
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    role = o.roles[i];
+                                    break;
+                                }
+                            }
+                            var j;
+                            for (j = 0; j < role.users.length; ++j) {
+                                if (role.users[j].id == userId) {
+                                    break;
+                                }
+                            }
+                            role.users.remove(j);
+                        },
+                        removeRole: function () {
+                            var i;
+                            for (i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == o.currentRoleId) {
+                                    break;
+                                }
+                            }
+                            o.roles.remove(i);
+                        },
+                        containsUser: function (roleId, userId) {
+                            var role;
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    role = o.roles[i];
+                                    break;
+                                }
+                            }
+                            for (var j = 0; j < role.users.length; ++j) {
+                                if (role.users[j].id == userId) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        }
+                    };
+                    o.currentRoleId = o.roles.length == 0 ? -1 : o.roles[0].id;
+                    $scope.included = o;
+                }
+            }]
+        }, {
+            name: "ISSUESETTING",
+            children: [{
+                name: "CATEGORY_STATE",
+                url: "category",
+                func: function () {
+                    var o = {
+                        nameOfTypeToAdd: "",
+                        showAddTr: false,
+                        types: [{
+                            id: 1,
+                            name: "轻微",
+                            color: "info"
+                        }, {
+                            id: 2,
+                            name: "严重",
+                            color: "danger"
+                        }],
+                        setTypeColor: function (typeId, color) {
+                            // TODO
+                            for (var i = 0; i < o.types.length; ++i) {
+                                if (o.types[i].id == typeId) {
+                                    o.types[i].color = color;
+                                }
+                            }
+                        },
+                        removeType: function (typeId) {
+                            // TODO
+                            var i;
+                            for (i = 0; i < o.types.length; ++i) {
+                                if (o.types[i].id == typeId) {
+                                    break;
+                                }
+                            }
+                            o.types.remove(i);
+                        },
+                        addType: function () {
+                            if (o.nameOfTypeToAdd != "") {
+                                // TODO
+                                o.types.push({
+                                    id: 3,
+                                    name: o.nameOfTypeToAdd,
+                                    color: "default"
+                                });
+                                o.nameOfTypeToAdd = "";
+                                o.showAddTr = false;
+                            }
+                        },
+                        nameOfStateToAdd: "",
+                        showAddStateTr: false,
+                        states: [{
+                            id: 1,
+                            name: "打开",
+                            color: "info"
+                        }, {
+                            id: 2,
+                            name: "修复",
+                            color: "default"
+                        }, {
+                            id: 3,
+                            name: "进行中",
+                            color: "warning"
+                        }],
+                        setStateColor: function (stateId, color) {
+                            // TODO
+                            for (var i = 0; i < o.states.length; ++i) {
+                                if (o.states[i].id == stateId) {
+                                    o.states[i].color = color;
+                                }
+                            }
+                        },
+                        removeState: function (stateId) {
+                            // TODO
+                            var i;
+                            for (i = 0; i < o.states.length; ++i) {
+                                if (o.states[i].id == stateId) {
+                                    break;
+                                }
+                            }
+                            o.states.remove(i);
+                        },
+                        addState: function () {
+                            if (o.nameOfStateToAdd != "") {
+                                // TODO
+                                o.states.push({
+                                    id: 4,
+                                    name: o.nameOfStateToAdd,
+                                    color: "default"
+                                });
+                                o.nameOfStateToAdd = "";
+                                o.showAddStateTr = false;
+                            }
+                        }
+                    };
+                    $scope.included = o;
+                }
+            }, {
+                name: "AUTODISPATCH",
+                url: ""
+            }, {
+                name: "CREATINGPRIVILEGE",
+                url: ""
+            }, {
+                name: "TRANSPRIVILEGE",
+                url: ""
+            }]
+        }];
+        $scope.setting = {};
+        var useTreeAsDefault = 2;
+        var useElemAsDefault = 0;
+        $scope.settingsTree[useTreeAsDefault].children[useElemAsDefault].func();
+        $scope.setting.name = $scope.settingsTree[useTreeAsDefault].children[useElemAsDefault].name;
+        $scope.setting.url = $scope.settingsTree[useTreeAsDefault].children[useElemAsDefault].url;
+    });
+</script>
+</html>

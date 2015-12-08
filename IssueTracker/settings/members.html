@@ -1,0 +1,44 @@
+<div ng-click="included.hideSelectUser()">
+    <form style="text-align: center;">
+        <div class="form-group form-inline">
+            <input id="selectUserInput" class="form-control" type="text" placeholder="{{'USERSELECT' | translate}}"
+                   style="width: 70%;"
+                   ng-model="included.selectUserText" ng-change="included.changeSelectUser()">
+
+            <ul id="selectUserUl" class="list-group" style="position: absolute;z-index: 999;text-align: left;"
+                ng-show="included.showSelectUser">
+                <li class="list-group-item" ng-show="included.selectUserLoading">
+                    {{'LOADING' | translate}}
+                </li>
+                <li class="list-group-item" ng-class="{'bg-success-x':included.mouseOnSelectUserId==selectUser.id}"
+                    ng-mousemove="included.mouseOnSelectUserId=selectUser.id"
+                    ng-hide="included.selectUserLoading"
+                    ng-repeat="selectUser in included.selectUsers">
+                    <div class="row">
+                        <div class="col-xs-8">
+                            {{selectUser.name}}
+                        </div>
+                        <div class="col-xs-4" style="text-align: right;" ng-show="included.mouseOnSelectUserId==selectUser.id">
+                            <button class="btn btn-success btn-xs">{{'ADDUSER' | translate}}</button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col-xs-4" ng-repeat="member in included.members">
+            <div class="panel panel-info">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-10">{{member.name}}</div>
+                        <div class="col-xs-2" style="text-align: right;">
+                            <a href="#" ng-click="included.removeMember(member.id)">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
