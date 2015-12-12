@@ -122,7 +122,7 @@ function i18n_zh_cn() {
         HIDEDETAIL: '隐藏',
         // action
         SUBMIT: '提交',
-        RESET: '取消',
+        RESET: '重置',
 
         /****************
          * project.html *
@@ -182,6 +182,18 @@ function i18n_zh_cn() {
         REMOVEROLE: '移除角色',
 
         ADDTYPE: "增加分类",
-        ADDSTATE: "增加状态"
+        ADDSTATE: "增加状态",
+        DEFAULTSTATE: "默认",
+
+        ISSUEINFO: "事务信息",
+        ISSUETYPE: "分类",
+        ISSUESTATE: "状态",
+        COMMENTS: "评论",
+        SENDCOMMENT: "发布评论",
+        CHANGETYPE: "变更分类",
+        CHANGESTATE: "变更状态",
+        NOCHANGE: "无变化",
+        TYPE: "分类",
+        STATE: "状态"
     };
 }

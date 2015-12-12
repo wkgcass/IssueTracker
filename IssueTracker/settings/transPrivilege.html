@@ -1,0 +1,48 @@
+<ul class="nav nav-tabs">
+    <li role="presentation" ng-class="{'active':role.id==included.currentRoleId}"
+        ng-repeat="role in included.roles">
+        <a href="#" ng-click="included.currentRoleId=role.id">{{role.name}}</a>
+    </li>
+</ul>
+<div ng-repeat="role in included.roles" ng-show="role.id==included.currentRoleId">
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="width: 15%;">&nbsp;</th>
+            <th style="text-align: center;" ng-repeat="typeCol in included.types"><span class="badge bg-{{typeCol.color}}-y">{{typeCol.name}}</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="typeRow in included.types">
+            <td><span class="badge bg-{{typeRow.color}}-y">{{typeRow.name}}</span></td>
+            <td style="text-align: center;" ng-repeat="toType in included.types" ng-click="included.changeType(role.id,typeRow.id,toType.id)">
+                <span ng-show="included.typeCanTrans(role.id,typeRow.id,toType.id)"
+                      class="glyphicon glyphicon-ok"></span>
+                <span ng-show="typeRow.id==toType.id" class="glyphicon glyphicon-remove"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="width: 15%;">&nbsp;</th>
+            <th style="text-align: center;" ng-repeat="stateCol in included.states"><span
+                    class="label label-{{stateCol.color}}">{{stateCol.name}}</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="stateRow in included.states">
+            <td><span class="label label-{{stateRow.color}}">{{stateRow.name}}</span></td>
+            <td style="text-align: center;" ng-repeat="toState in included.states" ng-click="included.changeState(role.id,stateRow.id,toState.id)">
+                <span ng-show="included.stateCanTrans(role.id,stateRow.id,toState.id)"
+                      class="glyphicon glyphicon-ok"></span>
+                <span ng-show="stateRow.id==toState.id" class="glyphicon glyphicon-remove"></span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

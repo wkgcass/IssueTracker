@@ -1,0 +1,26 @@
+<table class="table">
+    <thead>
+    <tr>
+        <td style="width:6%">&nbsp;</td>
+        <td style="text-align: center;" ng-repeat="role in included.roles">{{role.name}}</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="type in included.types">
+        <td><span class="badge bg-{{type.color}}-y">{{type.name}}</span></td>
+        <td style="text-align: center;" ng-repeat="role in included.roles" ng-click="included.changeType(role.id,type.id)">
+            <span class="glyphicon glyphicon-ok" ng-show="included.containsType(role.id,type.id)"></span>
+        </td>
+    </tr>
+    <tr>
+        <td>&nbsp;</td>
+        <td ng-repeat="x in included.roles">&nbsp;</td>
+    </tr>
+    <tr ng-repeat="state in included.states">
+        <td><span class="label label-{{state.color}}">{{state.name}}</span></td>
+        <td style="text-align: center;" ng-repeat="role in included.states" ng-click="included.changeState(role.id,state.id)">
+            <span class="glyphicon glyphicon-ok" ng-show="included.containsState(role.id,state.id)"></span>
+        </td>
+    </tr>
+    </tbody>
+</table>

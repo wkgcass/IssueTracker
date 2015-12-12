@@ -24,7 +24,7 @@
                         <div class="col-xs-6">
                             <a><h4>{{event.content.title}}</h4></a>
                         </div>
-                        <div class="col-xs-6" style="text-align:right">
+                        <div class="col-xs-6" style="text-align:right" ng-show="event.content.vote!=0">
                             Vote&nbsp;<span class="badge">{{event.content.vote}}</span>
                         </div>
                     </div>
@@ -35,7 +35,7 @@
                         {{'POSTER' | translate}} <span class="glyphicon glyphicon-user"></span>
                         {{event.content.user.name}}&nbsp;&nbsp;&nbsp;
                         {{'POSTDATE' | translate}} <span class="glyphicon glyphicon-time"></span>
-                        {{event.content.commentDate | date:'yyyy/MM/dd'}}
+                        {{event.content.progressDate | date:'yyyy/MM/dd'}}
                     </p>
 
                     <div ng-show="event.displayAll">
@@ -79,15 +79,17 @@
                 <form>
                     <div class="form-group">
                         <label for="title">{{'PROGRESSTITLEINPUT' | translate}}</label>
-                        <input type="text" class="form-control" id="title"
+                        <input type="text" class="form-control" id="title" ng-model="post.title"
                                placeholder="{{'PROGRESSTITLEINPUT' | translate}}">
                     </div>
                     <div class="form-group">
                         <label for="content">{{'PROGRESSCONTENTINPUT' | translate}}</label>
                         <textarea class="form-control" id="content" style="resize: none;height: 250px;"
+                                  ng-model="post.content"
                                   placeholder="{{'PROGRESSCONTENTINPUT' | translate}}"></textarea>
                     </div>
-                    <button type="button" class="btn btn-default">{{'SUBMIT' | translate}}</button>
+                    <button type="button" class="btn btn-default" ng-click="post.doPost()">{{'SUBMIT' | translate}}
+                    </button>
                 </form>
             </div>
         </div>
@@ -129,17 +131,43 @@
             type: "progress",
             displayAll: false,
             content: {
-                commentId: 1,
+                progressId: 1,
                 user: {
                     userId: 2,
                     name: "wkgcass"
                 },
                 title: "完成了页面设计",
                 content: "完成了页面设计",
-                commentDate: Date.now(),
+                progressDate: Date.now(),
                 vote: 7
             }
-        }]
+        }];
+        $scope.post = {
+            title: "",
+            content: "",
+            doPost: function () {
+                if ($scope.post.title == "") {
+                    alert("标题不能为空");
+                }
+                $scope.events.unshift({
+                    type: "progress",
+                    displayAll: false,
+                    content: {
+                        progressId: 2,
+                        user: {
+                            userId: $scope.user.userId,
+                            name: $scope.user.name
+                        },
+                        title: $scope.post.title,
+                        content: $scope.post.content,
+                        progressDate: Date.now(),
+                        vote: 0
+                    }
+                });
+                $scope.post.title = "";
+                $scope.post.content = "";
+            }
+        };
     });
 </script>
 </html>

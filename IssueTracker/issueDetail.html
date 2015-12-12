@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html ng-app="issue" ng-controller="controller">
+<head>
+    <meta charset="UTF-8">
+    <script src="js/angular.js"></script>
+    <script src="js/angular-translate.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/common.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/color.css">
+    <title>{{'ISSUES_TITLE' | translate}} - {{issue.title}} - {{project.name}}</title>
+</head>
+<body style="padding-top: 70px;">
+<div class="container">
+    <div ng-include="'navbar.html'"></div>
+    <div class="row">
+        <div class="col-xs-8">
+            <h2>#{{issue.projectIssueId}}&nbsp;{{issue.title}}</h2>
+            <br>
+
+            <div style="font-size: 20px;">{{issue.content}}</div>
+            <hr>
+            <h3>{{'COMMENTS' | translate}}</h3>
+
+            <div class="list-group">
+                <div class="list-group-item" ng-repeat="comment in comments">
+                    <div style="font-size: 15px;">{{comment.content}}</div>
+                    <hr style="border-top:1px dashed #bdbdbd;margin-bottom: 10px;">
+                    <span class="glyphicon glyphicon-user"></span>
+                    {{comment.user.name}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span class="glyphicon glyphicon-time"></span>
+                    {{comment.commentDate | date:'yyyy/MM/dd HH:mm:ss'}}
+                    <span ng-if="comment.typeChange!=null">&nbsp;&nbsp;&nbsp;&nbsp;
+                        {{'TYPE' | translate}}
+                        <span class="badge bg-{{comment.typeChange.fromColor}}-y">{{comment.typeChange.from}}</span>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                        <span class="badge bg-{{comment.typeChange.toColor}}-y">{{comment.typeChange.to}}</span>
+                    </span>
+                    <span ng-if="comment.stateChange!=null">&nbsp;&nbsp;&nbsp;&nbsp;
+                        {{'STATE' | translate}}
+                        <span class="label label-{{comment.stateChange.fromColor}}">{{comment.stateChange.from}}</span>
+                        <span class="glyphicon glyphicon-arrow-right"></span>
+                        <span class="label label-{{comment.stateChange.toColor}}">{{comment.stateChange.to}}</span>
+                    </span>
+                </div>
+                <div class="list-group-item">
+                    <form>
+                        <label for="commentToSend">{{'SENDCOMMENT' | translate}}</label>
+
+                        <div class="row">
+                            <div class="col-xs-10">
+                                <input id="commentToSend" type="text" class="form-control" ng-model="commentToSend">
+                            </div>
+                            <div class="col-xs-2" style="padding-left: 0;">
+                                <button class="btn btn-success" ng-click="sendComment();">{{'SUBMIT' | translate}}
+                                </button>
+                            </div>
+                        </div>
+                        <div class="btn-group">
+                            <div class="btn-group" style="display: inline;">
+                                <button class="btn btn-default dropdown-toggle" type="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span ng-if="changeTypeTo!=null">{{changeTypeTo.name}}</span>
+                                    <span ng-show="changeTypeTo==null">{{'CHANGETYPE' | translate}}</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="#" ng-click="setChangeTypeTo(0);">{{'RESET' | translate}}</a></li>
+                                    <li ng-repeat="type in types">
+                                        <a href="#" ng-if="type.name!=issue.type.name"
+                                           ng-click="setChangeTypeTo(type.id);">{{type.name}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="btn-group" style="display: inline;">
+                                <button class="btn btn-default dropdown-toggle" type="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    <span ng-if="changeStateTo!=null">{{changeStateTo.name}}</span>
+                                    <span ng-show="changeStateTo==null">{{'CHANGESTATE' | translate}}</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                    <li><a href="#" ng-click="setChangeStateTo(0);">{{'RESET' | translate}}</a></li>
+                                    <li ng-repeat="state in states">
+                                        <a href="#" ng-if="state.name!=issue.state.name"
+                                           ng-click="setChangeStateTo(state.id);">{{state.name}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <nav style="text-align: center;">
+                <ul class="pagination pagination-sm">
+                    <li ng-show="pagingInfo.currentPage!=1">
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li ng-repeat="page in pages" ng-class="{'active':page.active,'disabled':page.index=='...'}"><a
+                            href="#">{{page.index}}</a></li>
+                    <li ng-show="pagingInfo.currentPage!=pagingInfo.totalPages">
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-xs-4">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>{{'ISSUEINFO' | translate}}</h4>
+                </div>
+                <div class="panel-body">
+                    {{'POSTER' | translate}}
+                    <span class="glyphicon glyphicon-user"></span>
+                    {{issue.user.name}}
+                    <br><br>
+                    {{'POSTDATE' | translate}}
+                    <span class="glyphicon glyphicon-time"></span>
+                    {{issue.issueDate | date:'yyyy/MM/dd HH:mm:ss'}}
+                    <br><br>
+                    {{'ISSUETYPE' | translate}}&nbsp;&nbsp;&nbsp;
+                    <span ng-if="issue.type!=null" class="badge bg-{{issue.type.color}}-y">{{issue.type.name}}</span>
+                    <br><br>
+                    {{'ISSUESTATE' | translate}}&nbsp;&nbsp;&nbsp;
+                    <span class="label label-{{issue.state.color}}">{{issue.state.name}}</span>
+                    <br><br>
+                    Watch&nbsp;&nbsp;
+                    <span class="badge" ng-class="{'bg-success-y':isWatching}" style="cursor: pointer;"
+                          ng-click="changeWatch()">{{issue.watch}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="'foot.html'"></div>
+</body>
+</html>
+<script>
+    var app = angular.module('issue', ['pascalprecht.translate']).config(function ($translateProvider) {
+        $translateProvider.translations('zh-cn', i18n_zh_cn());
+        $translateProvider.preferredLanguage('zh-cn');
+    });
+    initUser(app);
+    app.controller('controller', function ($scope, User) {
+        $scope.user = User;
+        $scope.navbar = {
+            current: "issue"
+        };
+        $scope.project = {
+            projectId: 1,
+            name: "Issue Tracker"
+        };
+
+        $scope.issue = {
+            issueId: 1,
+            projectIssueId: 1,
+            title: "界面需要美化",
+            user: {
+                userId: 1,
+                name: "wkgcass@hotmail.com"
+            },
+            content: "增加一些自定的css,而不要全套bootstrap",
+            type: {
+                name: "轻微",
+                color: "info"
+            },
+            state: {
+                name: "修复",
+                color: "default"
+            },
+            issueDate: Date.now(),
+            watch: 2
+        };
+        $scope.isWatching = false;
+        $scope.changeWatch = function () {
+            if ($scope.isWatching) {
+                --$scope.issue.watch;
+            } else {
+                ++$scope.issue.watch;
+            }
+            // TODO
+            $scope.isWatching = !$scope.isWatching;
+        };
+        $scope.comments = [{
+            commentId: 1,
+            user: {
+                userId: 1,
+                name: "wkgcass@hotmail.com"
+            },
+            commentDate: Date.now(),
+            content: "已经很好看了",
+            typeChange: null,
+            stateChange: null
+        }, {
+            commentId: 2,
+            user: {
+                userId: 2,
+                name: "wkgcass"
+            },
+            commentDate: Date.now(),
+            content: "对呀,要求不要这么高",
+            typeChange: null,
+            stateChange: {
+                from: "打开",
+                fromColor: "info",
+                to: "修复",
+                toColor: "default"
+            }
+        }];
+        $scope.commentToSend = "";
+        $scope.sendComment = function () {
+            if ($scope.commentToSend == "") return;
+            // TODO
+            var o = {
+                commentId: 3,
+                user: $scope.user,
+                commentDate: Date.now(),
+                content: $scope.commentToSend,
+                typeChange: null,
+                stateChange: null
+            };
+            if ($scope.changeTypeTo != null) {
+                o.typeChange = {
+                    from: $scope.issue.type.name,
+                    fromColor: $scope.issue.type.color,
+                    to: $scope.changeTypeTo.name,
+                    toColor: $scope.changeTypeTo.color
+                };
+                $scope.issue.type.name = $scope.changeTypeTo.name;
+                $scope.issue.type.color = $scope.changeTypeTo.color;
+            }
+            if ($scope.changeStateTo != null) {
+                o.stateChange = {
+                    from: $scope.issue.state.name,
+                    fromColor: $scope.issue.state.color,
+                    to: $scope.changeStateTo.name,
+                    toColor: $scope.changeStateTo.color
+                };
+                $scope.issue.state.name = $scope.changeStateTo.name;
+                $scope.issue.state.color = $scope.changeStateTo.color;
+            }
+            $scope.comments.push(o);
+            $scope.commentToSend = "";
+            $scope.changeTypeTo = null;
+            $scope.changeStateTo = null;
+        };
+        $scope.types = [{
+            id: 1,
+            name: "轻微",
+            color: "info"
+        }, {
+            id: 2,
+            name: "严重",
+            color: "danger"
+        }];
+        $scope.states = [{
+            id: 1,
+            name: "打开",
+            color: "info"
+        }, {
+            id: 2,
+            name: "修复",
+            color: "default"
+        }, {
+            id: 3,
+            name: "进行中",
+            color: "warning"
+        }];
+        $scope.changeTypeTo = null;
+        $scope.changeStateTo = null;
+        $scope.setChangeTypeTo = function (id) {
+            if (id == 0) $scope.changeTypeTo = null;
+            for (var i = 0; i < $scope.types.length; ++i) {
+                if ($scope.types[i].id == id) {
+                    $scope.changeTypeTo = $scope.types[i];
+                }
+            }
+        };
+        $scope.setChangeStateTo = function (id) {
+            if (id == 0) $scope.changeStateTo = null;
+            for (var i = 0; i < $scope.states.length; ++i) {
+                if ($scope.states[i].id == id) {
+                    $scope.changeStateTo = $scope.states[i];
+                }
+            }
+        };
+
+        var pagingInfo = {
+            totalPages: 30,
+            currentPage: 15,
+            amount: 30,
+
+            nextPage: true,
+            previousPage: true,
+
+            changeTo: function (index) {
+                // TODO
+                paging($scope, pagingInfo.totalPages, pagingInfo.currentPage, 10);
+            }
+        };
+        pagingInfo.changeTo(1);
+        $scope.pagingInfo = pagingInfo;
+
+    });
+</script>

@@ -275,6 +275,7 @@
                             name: "进行中",
                             color: "warning"
                         }],
+                        defaultState: 1,
                         setStateColor: function (stateId, color) {
                             // TODO
                             for (var i = 0; i < o.states.length; ++i) {
@@ -282,6 +283,10 @@
                                     o.states[i].color = color;
                                 }
                             }
+                        },
+                        setDefaultState: function (stateId) {
+                            // TODO
+                            o.defaultState = stateId;
                         },
                         removeState: function (stateId) {
                             // TODO
@@ -309,18 +314,277 @@
                     $scope.included = o;
                 }
             }, {
-                name: "AUTODISPATCH",
-                url: ""
-            }, {
                 name: "CREATINGPRIVILEGE",
-                url: ""
+                url: "createPrivilege",
+                func: function () {
+                    var o = {
+                        roles: [{
+                            id: 1,
+                            name: "管理员",
+                            types: [1, 2],
+                            states: [1, 2, 3]
+                        }, {
+                            id: 2,
+                            name: "开发",
+                            types: [1],
+                            states: [1, 3]
+                        }, {
+                            id: 3,
+                            name: "测试",
+                            types: [1, 2],
+                            states: [1]
+                        }],
+                        types: [{
+                            id: 1,
+                            name: "轻微",
+                            color: "info"
+                        }, {
+                            id: 2,
+                            name: "严重",
+                            color: "danger"
+                        }],
+                        states: [{
+                            id: 1,
+                            name: "打开",
+                            color: "info"
+                        }, {
+                            id: 2,
+                            name: "修复",
+                            color: "default"
+                        }, {
+                            id: 3,
+                            name: "进行中",
+                            color: "warning"
+                        }],
+                        containsType: function (roleId, typeId) {
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    for (var j = 0; j < o.roles[i].types.length; ++j) {
+                                        if (o.roles[i].types[j] == typeId) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                }
+                            }
+                        },
+                        containsState: function (roleId, stateId) {
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    for (var j = 0; j < o.roles[i].states.length; ++j) {
+                                        if (o.roles[i].states[j] == stateId) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                }
+                            }
+                        },
+                        changeType: function (roleId, typeId) {
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    var found = false;
+                                    var j;
+                                    for (j = 0; j < o.roles[i].types.length; ++j) {
+                                        if (o.roles[i].types[j] == typeId) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (found) {
+                                        // found TODO
+                                        o.roles[i].types.remove(j);
+                                    } else {
+                                        // not found TODO
+                                        o.roles[i].types.push(typeId);
+                                    }
+                                    break;
+                                }
+                            }
+                        },
+                        changeState: function (roleId, stateId) {
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    var found = false;
+                                    var j;
+                                    for (j = 0; j < o.roles[i].states.length; ++j) {
+                                        if (o.roles[i].states[j] == stateId) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (found) {
+                                        // found TODO
+                                        o.roles[i].states.remove(j);
+                                    } else {
+                                        // not found TODO
+                                        o.roles[i].states.push(stateId);
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    };
+                    $scope.included = o;
+                }
             }, {
                 name: "TRANSPRIVILEGE",
-                url: ""
+                url: "transPrivilege",
+                func: function () {
+                    var o = {
+                        currentRoleId: -1,
+                        roles: [{
+                            id: 1,
+                            name: "管理员",
+                            typeTrans: [{
+                                from: 1,
+                                to: 2
+                            }, {
+                                from: 2,
+                                to: 1
+                            }],
+                            stateTrans: [{
+                                from: 1,
+                                to: 2
+                            }, {
+                                from: 2,
+                                to: 1
+                            }]
+                        }, {
+                            id: 2,
+                            name: "开发",
+                            typeTrans: [{
+                                from: 1,
+                                to: 2
+                            }, {
+                                from: 2,
+                                to: 1
+                            }],
+                            stateTrans: [{
+                                from: 1,
+                                to: 2
+                            }, {
+                                from: 2,
+                                to: 1
+                            }]
+                        }, {
+                            id: 3,
+                            name: "测试",
+                            typeTrans: [{
+                                from: 1,
+                                to: 2
+                            }],
+                            stateTrans: [{
+                                from: 1,
+                                to: 2
+                            }]
+                        }],
+                        types: [{
+                            id: 1,
+                            name: "轻微",
+                            color: "info"
+                        }, {
+                            id: 2,
+                            name: "严重",
+                            color: "danger"
+                        }],
+                        states: [{
+                            id: 1,
+                            name: "打开",
+                            color: "info"
+                        }, {
+                            id: 2,
+                            name: "修复",
+                            color: "default"
+                        }, {
+                            id: 3,
+                            name: "进行中",
+                            color: "warning"
+                        }],
+                        typeCanTrans: function (roleId, from, to) {
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    for (var j = 0; j < o.roles[i].typeTrans.length; ++j) {
+                                        if (o.roles[i].typeTrans[j].from == from && o.roles[i].typeTrans[j].to == to) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                }
+                            }
+                        },
+                        stateCanTrans: function (roleId, from, to) {
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    for (var j = 0; j < o.roles[i].stateTrans.length; ++j) {
+                                        if (o.roles[i].stateTrans[j].from == from && o.roles[i].stateTrans[j].to == to) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                }
+                            }
+                        },
+                        changeType: function (roleId, from, to) {
+                            if (from == to) return;
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    var found = false;
+                                    var j;
+                                    for (j = 0; j < o.roles[i].typeTrans.length; ++j) {
+                                        if (o.roles[i].typeTrans[j].from == from && o.roles[i].typeTrans[j].to == to) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (found) {
+                                        // found TODO
+                                        o.roles[i].typeTrans.remove(j);
+                                    } else {
+                                        // not found TODO
+                                        o.roles[i].typeTrans.push({
+                                            from: from,
+                                            to: to
+                                        });
+                                    }
+                                    break;
+                                }
+                            }
+                        },
+                        changeState: function (roleId, from, to) {
+                            if (from == to) return;
+                            for (var i = 0; i < o.roles.length; ++i) {
+                                if (o.roles[i].id == roleId) {
+                                    var found = false;
+                                    var j;
+                                    for (j = 0; j < o.roles[i].stateTrans.length; ++j) {
+                                        if (o.roles[i].stateTrans[j].from == from && o.roles[i].stateTrans[j].to == to) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (found) {
+                                        // found TODO
+                                        o.roles[i].stateTrans.remove(j);
+                                    } else {
+                                        // not found TODO
+                                        o.roles[i].stateTrans.push({
+                                            from: from,
+                                            to: to
+                                        });
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    };
+                    o.currentRoleId = o.roles.length == 0 ? -1 : o.roles[0].id;
+                    $scope.included = o;
+                }
             }]
         }];
         $scope.setting = {};
-        var useTreeAsDefault = 2;
+        var useTreeAsDefault = 0;
         var useElemAsDefault = 0;
         $scope.settingsTree[useTreeAsDefault].children[useElemAsDefault].func();
         $scope.setting.name = $scope.settingsTree[useTreeAsDefault].children[useElemAsDefault].name;

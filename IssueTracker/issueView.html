@@ -47,15 +47,16 @@
                 <div class="list-group-item" ng-repeat="event in events">
                     <div class="row">
                         <div class="col-xs-6">
-                            <a><h4>{{event.content.title}}</h4></a>
+                            <a href="issueDetail.html?issueId={{}}"><h4>{{event.content.title}}</h4></a>
                         </div>
-                        <div class="col-xs-6" style="text-align:right">
+                        <div class="col-xs-6" style="text-align:right" ng-show="event.content.watch!=0">
                             Watch&nbsp;<span class="badge">{{event.content.watch}}</span>
                         </div>
                     </div>
 
                     <p>
-                        <span class="badge bg-info bg-{{event.content.color}}-y" style="margin-top: -4px;">{{event.content.type}}</span>&nbsp;&nbsp;
+                        <span ng-if="event.content.type!=null" class="badge bg-info bg-{{event.content.type.color}}-y"
+                              style="margin-top: -4px;">{{event.content.type.name}}</span>&nbsp;&nbsp;
                         {{'POSTER' | translate}} <span class="glyphicon glyphicon-user"></span>
                         {{event.content.user.name}}&nbsp;&nbsp;&nbsp;
                         {{'POSTDATE' | translate}} <span class="glyphicon glyphicon-time"></span>
@@ -164,8 +165,10 @@
                     name: "wkgcass@hotmail.com"
                 },
                 content: "增加一些自定的css,而不要全套bootstrap",
-                type: "轻微",
-                color: "info",
+                type: {
+                    name: "轻微",
+                    color: "info"
+                },
                 issueDate: Date.now(),
                 watch: 2
             }
@@ -180,8 +183,10 @@
                     name: "wkgcass@hotmail.com"
                 },
                 content: "许多时候点击发布后无响应",
-                type: "严重",
-                color: "danger",
+                type: {
+                    name: "严重",
+                    color: "danger"
+                },
                 issueDate: Date.now(),
                 watch: 3
             }

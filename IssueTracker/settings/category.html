@@ -101,8 +101,15 @@
             <span ng-show="state.color=='primary'" class="glyphicon glyphicon-ok"></span>
         </th>
         <th>
-            <button ng-click="included.removeState(state.id)" class="btn btn-danger btn-xs">{{'DELETE' | translate}}
-            </button>
+            <div class="btn-group">
+                <button ng-click="included.removeState(state.id)" class="btn btn-danger btn-xs">{{'DELETE' | translate}}
+                </button>
+                <button class="btn btn-xs"
+                        ng-class="{'btn-primary':state.id==included.defaultState,'btn-default':state.id!=included.defaultState}"
+                        ng-click="included.setDefaultState(state.id)">
+                    {{'DEFAULTSTATE' | translate}}
+                </button>
+            </div>
         </th>
     </tr>
     <tr ng-show="included.showAddStateTr">
@@ -119,9 +126,11 @@
         <th>&nbsp;</th>
         <th>
             <div class="btn-group">
-                <button class="btn btn-success btn-xs" ng-click="included.addState()">{{'ADDSTATE' | translate}}</button>
+                <button class="btn btn-success btn-xs" ng-click="included.addState()">{{'ADDSTATE' | translate}}
+                </button>
                 <button class="btn btn-default btn-xs"
-                        ng-click="included.showAddStateTr=false;included.nameOfStateToAdd = '';">{{'RETURN' | translate}}
+                        ng-click="included.showAddStateTr=false;included.nameOfStateToAdd = '';">{{'RETURN' |
+                    translate}}
                 </button>
             </div>
         </th>
@@ -135,7 +144,8 @@
         <th>&nbsp;</th>
         <th>&nbsp;</th>
         <th>
-            <button class="btn btn-success btn-xs" ng-click="included.showAddStateTr=true">{{'ADDSTATE' | translate}}</button>
+            <button class="btn btn-success btn-xs" ng-click="included.showAddStateTr=true">{{'ADDSTATE' | translate}}
+            </button>
         </th>
     </tr>
     </tbody>
